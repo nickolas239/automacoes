@@ -26,6 +26,9 @@ commit_id = repo.create_commit(
 
 credenciais = ('nickolas', "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")
 
-remote = repo.remotes["origin"]
-remote.credentials = credenciais
-remote.push([f"refs/heads/{branch_atual}"])
+try:
+    remote = repo.remotes["origin"]
+    remote.credentials = credenciais
+    remote.push([f"refs/heads/{branch_atual}"])
+except Exception as e:
+    print(e)
