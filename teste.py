@@ -1,18 +1,28 @@
-import git
+import pygit2
 
-repo = git.Repo('./')
+repo = pygit2.Repository('./')
 
-repo.index.add("*")
+index = repo.index
+index.add_all()
+index.write()
 
-nome_branch_local = repo.active_branch.name
+tree_id = index.write_tree()
 
-try:
-    repo.remotes.origin.refs[nome_branch_local]
-except IndexError:
-    branch_remota = "dev"
+author = pygit2.Signature('Nickolas', 'teste@github.com')
+commiter = author
 
-    repo.git.branch(f"--set-upstream-to={branch_remota}", nome_branch_local)
+branch_atual = repo.head.shorthand
 
-repo.index.commit("Teste de commit via automacao")
+print(branch_atual)
 
-repo.remotes.origin.push()
+commit_id = repo.create_commit(
+    f"refs/heads/{branch_atual}",
+    author,
+    commiter,
+    'Teste de commit via automacao',
+    tree_id,
+    [repo.head.target],
+)
+
+remote = repo.remotes["origin"]
+remote.push([f"refs/heads/{branch_atual}"])
