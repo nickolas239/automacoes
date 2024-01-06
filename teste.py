@@ -24,5 +24,8 @@ commit_id = repo.create_commit(
     [repo.head.target],
 )
 
+credenciais = ('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', "")
+
 remote = repo.remotes["origin"]
+remote.credentials = credenciais
 remote.push([f"refs/heads/{branch_atual}"])
